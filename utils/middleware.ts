@@ -20,7 +20,9 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
 
   if (err instanceof HttpError) {
     return res.status(err.status).json({error: err.message})
+  } else if (err.message !== undefined) {
+    return res.status(500).json({error: err.message})
+  } else {
+    return res.status(500).end()
   }
-
-  next(err)
 }

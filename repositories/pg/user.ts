@@ -1,12 +1,11 @@
-import pg from 'pg'
+import {Pool} from 'pg'
 
-import Pool from './storage.js'
-import User from '../../models/user.js'
+import {User, DbUser} from '../../models/user.js'
 import {NotUniqueError, NotFoundError} from '../../errors/httpErrors.js'
-import { IAuthRepo } from '../../services/auth.js'
+import { IUserRepo } from '../../services/auth.js'
 
-export default class AuthRepo implements IAuthRepo {
-  protected pgPool = Pool
+export default class UserRepo implements IUserRepo {
+  constructor(protected pgPool: Pool) {}
 
   async create(user: User): Promise<number> {
     const query = 'INSERT INTO users(nickname, password) VALUES($1, $2) RETURNING id'
@@ -21,14 +20,14 @@ export default class AuthRepo implements IAuthRepo {
         throw err
     }
   
-    const id = Number(res.rows[0].id) //TODO: hardcoded column name
+    const id = Number(res.rows[0].id) //TODO: hardcoded column name 'id'
     if (isNaN(id))
       throw new Error("Couldn't convert returned id to Number while creating user")
   
     return id
   }
   
-  async find(nickname: string): Promise<User> {
+  async find(nickname: string): Promise<DbUser> {
     const query = 'SELECT * FROM users WHERE nickname = $1'
     const values = [nickname]
     const res = await this.pgPool.query(query, values)
@@ -36,6 +35,6 @@ export default class AuthRepo implements IAuthRepo {
     if (res.rowCount === 0) 
       throw new NotFoundError('nickname')
     
-    return new User(res.rows[0].nickname, res.rows[0].password, res.rows[0].id)
+    return new DbUser(res.rows[0].nickname, res.rows[0].password, res.rows[0].id)
   }
 }
