@@ -16,18 +16,18 @@ export default class TokenService {
   ) {}
 
   async genTokenPair(userId: number): Promise<TokenPair> {
-    let accessExp = 60 * 60 * 2       //2 hours
-    let accessToken = await this.genToken(userId, accessExp)
+    const accessExp = 60 * 60 * 2       //2 hours
+    const accessToken = await this.genToken(userId, accessExp)
 
-    let refreshExp = 60 * 60 * 24 * 7 //7 days
-    let refreshToken = await this.genToken(userId, refreshExp)
+    const refreshExp = 60 * 60 * 24 * 7 //7 days
+    const refreshToken = await this.genToken(userId, refreshExp)
     
     return new TokenPair(accessToken, refreshToken)
   }
 
   async genToken(userId: number, exp: number): Promise<string> {
-    let uuid = uuidv4()
-    let token = jwt.sign({ //TODO: change to async version
+    const uuid = uuidv4()
+    const token = jwt.sign({ //TODO: change to async version
       exp: Math.floor(Date.now() / 1000) + exp,
       uuid
     }, JWT_SECRET)
@@ -37,7 +37,7 @@ export default class TokenService {
   }
 
   async refresh(uuid: string): Promise<TokenPair> {
-    let userId = await this.tokenRepo.remove(uuid) //TODO: Maybe return boolean from tokenRepo and throw error here instead?
+    const userId = await this.tokenRepo.remove(uuid) //TODO: Maybe return boolean from tokenRepo and throw error here instead?
 
     return await this.genTokenPair(userId)
   }

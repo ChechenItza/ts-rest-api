@@ -8,7 +8,7 @@ export class DbUser {
     public id: number) 
   {}
 
-  validatePassword(password: string): Promise<Boolean> {
+  validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password)
   }
 }
@@ -27,14 +27,14 @@ export class User {
 
 export const userSchema = Joi.object({
   nickname: Joi.string()
-      .alphanum()
-      .min(3)
-      .max(30)
-      .required(),
+    .alphanum()
+    .min(3)
+    .max(30)
+    .required(),
 
   password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9!@#$&()\\-`.+,/\"]{3,30}$'))
-      .required(),
+    .pattern(new RegExp('^[a-zA-Z0-9!@#$&()\\-`.+,/"]{3,30}$'))
+    .required(),
       
 })
   .with('nickname', 'password')

@@ -15,7 +15,7 @@ export default class TokenRepo implements ITokenRepo {
   }
   
   async find(uuid: string): Promise<number> {
-    let userId = await this.client.get(uuid)
+    const userId = await this.client.get(uuid)
     if (userId === null)
       throw new UnauthorizedError('token')
 
@@ -23,9 +23,9 @@ export default class TokenRepo implements ITokenRepo {
   }
 
   async remove(uuid: string): Promise<number> {
-    let userId = await this.find(uuid)
+    const userId = await this.find(uuid)
 
-    let count = await this.client.del(uuid)
+    const count = await this.client.del(uuid)
     if (count === 0) 
       throw new UnauthorizedError('token')
     

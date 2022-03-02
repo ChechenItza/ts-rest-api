@@ -17,7 +17,7 @@ export default class AuthService {
   async signup(user: User): Promise<TokenPair> {
     await user.hashPassword()
 
-    let userId = await this.userRepo.create(user)
+    const userId = await this.userRepo.create(user)
     return this.tokenService.genTokenPair(userId)
   }
 

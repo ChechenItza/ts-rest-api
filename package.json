@@ -25,5 +25,10 @@
     "redis": "^4.0.4",
     "uuid": "^8.3.2"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0"
+  }
 }

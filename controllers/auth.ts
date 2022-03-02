@@ -27,8 +27,9 @@ export default class AuthController {
 
   async withPayload(req: Request, res: Response, next: NextFunction) {
     //extract bearer token
-    let authHeader = req.headers.authorization
-    if (authHeader && authHeader.startsWith("Bearer ")) {
+    const authHeader = req.headers.authorization
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      // eslint-disable-next-line no-var
       var token = authHeader.substring(7, authHeader.length)
     } else {
       return next(new UnauthorizedError('token'))
@@ -36,6 +37,7 @@ export default class AuthController {
 
     //verify token and extract payload
     try {
+      // eslint-disable-next-line no-var
       var payload = jwt.verify(token, JWT_SECRET) as TokenPayload //TODO: async version of this function
     } catch (err: any) {
       return next(new UnauthorizedError('token'))
@@ -48,7 +50,7 @@ export default class AuthController {
 
   async signup(req: Request, res: Response, next: NextFunction) {
     try {
-      let tokenPair = await this.authService.signup(req.user)
+      const tokenPair = await this.authService.signup(req.user)
       res.status(201).json(tokenPair)
     } catch (err: any) {
       next(err)
@@ -57,7 +59,7 @@ export default class AuthController {
 
   async signin(req: Request, res: Response, next: NextFunction) {
     try {
-      let tokenPair = await this.authService.signin(req.user)
+      const tokenPair = await this.authService.signin(req.user)
       res.json(tokenPair)
     } catch (err: any) {
       next(err)
@@ -66,7 +68,7 @@ export default class AuthController {
 
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      let tokenPair = await this.tokenService.refresh(req.userUuid)
+      const tokenPair = await this.tokenService.refresh(req.userUuid)
       res.json(tokenPair)
     } catch (err: any) {
       next(err)

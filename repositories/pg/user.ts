@@ -11,18 +11,19 @@ export default class UserRepo implements IUserRepo {
     const query = 'INSERT INTO users(nickname, password) VALUES($1, $2) RETURNING id'
     const values = [user.nickname, user.password]
     try {
+      // eslint-disable-next-line no-var
       var res = await this.pgPool.query(query, values)
     } catch (err: any) { 
       if (err.code === '23505')  //unique_violation
         //TODO: terrible, unique violation could occur in a different column if table is expanded with new columns
-        throw new NotUniqueError("nickname")
+        throw new NotUniqueError('nickname')
       else
         throw err
     }
   
     const id = Number(res.rows[0].id) //TODO: hardcoded column name 'id'
     if (isNaN(id))
-      throw new Error("Couldn't convert returned id to Number while creating user")
+      throw new Error('Couldn\'t convert returned id to Number while creating user')
   
     return id
   }
