@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "typeRoots": ["./types"],
     "strict": true,
-    "outDir": "./dist",
+    "outDir": "./build",
     "skipLibCheck": true,
     "moduleResolution": "node",
   },

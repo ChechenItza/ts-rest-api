@@ -15,7 +15,7 @@ export default class UserRepo implements IUserRepo {
       var res = await this.pgPool.query(query, values)
     } catch (err: any) { 
       if (err.code === '23505')  //unique_violation
-        //TODO: terrible, unique violation could occur in a different column if table is expanded with new columns
+        //TODO: unique violation could occur in a different column if table is expanded with new columns
         throw new NotUniqueError('nickname')
       else
         throw err
