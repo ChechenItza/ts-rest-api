@@ -39,6 +39,6 @@ export default class TokenService {
   async refresh(uuid: string): Promise<TokenPair> {
     const userId = await this.tokenRepo.remove(uuid) //TODO: Maybe return boolean from tokenRepo and throw error here instead?
 
-    return await this.genTokenPair(userId)
+    return this.genTokenPair(userId)
   }
 }
