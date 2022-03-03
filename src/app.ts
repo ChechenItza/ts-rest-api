@@ -1,6 +1,4 @@
 import express, {Request, Response, NextFunction} from 'express'
-//import pg from 'pg'
-//import { createClient } from 'redis'
 
 import { PORT } from './utils/config.js'
 import * as logger from './utils/logger.js'
@@ -19,12 +17,7 @@ if (process.env.NODE_ENV !== 'production')
   app.use(middleware.requestLogger)
 
 //Dependencies
-// let pgPool = new pg.Pool()
-// let userRepo = new UserRepo(pgPool)
 const userRepo = new UserRepo()
-// const rds = createClient()
-// rds.connect()
-// const tokenRepo = new TokenRepo(rds)
 const tokenRepo = new TokenRepo()
 const tokenService = new TokenService(tokenRepo)
 const authService = new AuthService(userRepo, tokenService)
