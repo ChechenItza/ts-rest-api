@@ -2,7 +2,7 @@ import {Pool} from 'pg'
 
 import {User, DbUser} from '../../models/user.js'
 import {NotUniqueError, NotFoundError} from '../../errors/httpErrors.js'
-import { IUserRepo } from '../../services/auth.js'
+import { IUserRepo } from '../../services/user.js'
 
 export default class UserRepo implements IUserRepo {
   constructor(protected pgPool: Pool) {}
@@ -28,14 +28,21 @@ export default class UserRepo implements IUserRepo {
     return id
   }
   
-  async find(nickname: string): Promise<DbUser> {
-    const query = 'SELECT * FROM users WHERE nickname = $1'
-    const values = [nickname]
+  async find(value: string | number): Promise<DbUser> {
+    if (typeof value === 'string')
+      // eslint-disable-next-line no-var
+      var column = 'nickname'
+    else
+      // eslint-disable-next-line no-var
+      var column = 'id'
+    
+    const query = 'SELECT * FROM users WHERE ' + column + ' = $1'
+    const values = [value]
     const res = await this.pgPool.query(query, values)
   
-    if (res.rowCount === 0) 
-      throw new NotFoundError('nickname')
-    
+    if (res.rowCount === 0)
+      throw new NotFoundError(column)
+      
     return new DbUser(res.rows[0].nickname, res.rows[0].password, res.rows[0].id)
   }
 }

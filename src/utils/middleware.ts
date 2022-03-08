@@ -15,14 +15,14 @@ export function unknownEndpoint(req: Request, res: Response) {
   res.status(404).send({ error: 'unknown endpoint' })
 }
 
-export function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
+export function errorHandler(err: any, req: Request, res: Response) {
   logger.error(err)
 
   if (err instanceof HttpError) {
-    return res.status(err.status).json({error: err.message})
+    res.status(err.status).json({error: err.message})
   } else if (err.message !== undefined) {
-    return res.status(500).json({error: err.message})
+    res.status(500).json({error: err.message})
   } else {
-    return res.status(500).end()
+    res.status(500).end()
   }
 }

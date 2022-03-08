@@ -1,12 +1,8 @@
-import { User, DbUser } from '../models/user.js'
+import { User } from '../models/user.js'
 import { TokenPair } from '../models/token.js'
 import { UnauthorizedError } from '../errors/httpErrors.js'
+import { IUserRepo } from './user.js'
 import TokenService from './token.js'
-
-export interface IUserRepo {
-  create(user: User): Promise<number>
-  find(nickname: string): Promise<DbUser>
-}
 
 export default class AuthService {
   constructor(

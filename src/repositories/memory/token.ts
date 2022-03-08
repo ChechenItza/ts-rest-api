@@ -1,33 +1,29 @@
 import { UnauthorizedError } from '../../errors/httpErrors.js'
 import { ITokenRepo } from '../../services/token.js'
 
-type tokenStorage = {
-  [key: string]: number
-}
-
 export default class TokenRepo implements ITokenRepo {
-  storage: tokenStorage = {}
+  storage: Map<string, number> = new Map()
 
   async create(uuid: string, userId: number, exp: number) {
-    this.storage[uuid] = userId
+    this.storage.set(uuid, userId)
 
     setTimeout(() => {
-      if (this.storage[uuid])
-        delete this.storage[uuid]
+      this.storage.delete(uuid)
     }, exp * 1000)
   }
   
   async find(uuid: string): Promise<number> {
-    if (this.storage[uuid] === undefined)
+    const userId = this.storage.get(uuid)
+    if (!userId)
       throw new UnauthorizedError('token')
 
-    return Number(this.storage[uuid])
+    return userId
   }
 
   async remove(uuid: string): Promise<number> {
-    const userId = this.storage[uuid]
-    if (this.storage[uuid])
-      delete this.storage[uuid]
+    const userId = this.storage.get(uuid)
+    if (userId)
+      this.storage.delete(uuid)
     else
       throw new UnauthorizedError('token')
     

@@ -1,12 +1,11 @@
 import 'dotenv/config'
 
 export const PORT = process.env.PORT ? process.env.PORT : '3000'
-export const HOST = process.env.HOST ? process.env.HOST : '0.0.0.0'
 
-export let JWT_SECRET: string
-if (!process.env.JWTSECRET) {
+if (!process.env.JWT_SECRET) {
   throw Error('JWT_SECRET undefined')
-} else {
-  JWT_SECRET = process.env.JWTSECRET
-}
+} 
+export const JWT_SECRET = process.env.JWT_SECRET
+export const ACCES_EXP = Number(process.env.ACCESS_EXP) ? Number(process.env.ACCESS_EXP) : 7200 //2 hours is default
+export const REFRESH_EXP = Number(process.env.REFRESH_EXP) ? Number(process.env.REFRESH_EXP) : 604800 //7 days is default
 

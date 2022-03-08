@@ -18,7 +18,7 @@ export default class AuthController {
     try {
       await userSchema.validateAsync(req.body)
     } catch(err: any) {
-      next(err)
+      return next(err)
     }
 
     req.user = new User(req.body.nickname, req.body.password)
