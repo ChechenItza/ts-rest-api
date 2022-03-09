@@ -15,7 +15,7 @@ export function unknownEndpoint(req: Request, res: Response) {
   res.status(404).send({ error: 'unknown endpoint' })
 }
 
-export function errorHandler(err: any, req: Request, res: Response) {
+export function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
   logger.error(err)
 
   if (err instanceof HttpError) {
