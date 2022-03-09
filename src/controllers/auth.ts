@@ -28,13 +28,10 @@ export default class AuthController {
   async withPayload(req: Request, res: Response, next: NextFunction) {
     //extract bearer token
     const authHeader = req.headers.authorization
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      // eslint-disable-next-line no-var
-      var token = authHeader.substring(7, authHeader.length)
-    } else {
+    if (!authHeader || !authHeader.startsWith('Bearer '))
       return next(new UnauthorizedError('token'))
-    }
 
+    const token = authHeader.substring(7, authHeader.length)
     //verify token and extract payload
     try {
       // eslint-disable-next-line no-var
