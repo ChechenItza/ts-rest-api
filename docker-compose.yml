@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - pgData:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER 
+      - POSTGRES_PASSWORD
+      - POSTGRES_DATABASE
+  redis:
+    image: redis:alpine
+  ts-crud:
+    build: .
+    ports: 
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+      - redis
+  
+volumes:
+   pgData:

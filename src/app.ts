@@ -1,12 +1,14 @@
 import express from 'express'
+import pg from 'pg'
+import { createClient } from 'redis'
 
-import { PORT } from './utils/config.js'
+import { PORT, REDIS_HOST, REDIS_PORT } from './utils/config.js'
 import * as logger from './utils/logger.js'
 import AuthController from './controllers/auth.js' 
 import AuthService from './services/auth.js'
-import UserRepo from './repositories/memory/user.js'
+import UserRepo from './repositories/pg/user.js'
 import * as middleware from './utils/middleware.js'
-import TokenRepo from './repositories/memory/token.js'
+import TokenRepo from './repositories/redis/token.js'
 import TokenService from './services/token.js'
 import UserService from './services/user.js'
 import UserController from './controllers/user.js'
@@ -19,8 +21,13 @@ if (process.env.NODE_ENV !== 'production')
   app.use(middleware.requestLogger)
 
 //Dependencies
-const userRepo = new UserRepo()
-const tokenRepo = new TokenRepo()
+const pgPool = new pg.Pool()
+const userRepo = new UserRepo(pgPool)
+
+const rds = createClient({ url: `redis://${REDIS_HOST}:${REDIS_PORT}` })
+rds.connect()
+const tokenRepo = new TokenRepo(rds)
+
 const tokenService = new TokenService(tokenRepo)
 const authService = new AuthService(userRepo, tokenService)
 const userService = new UserService(userRepo)
@@ -48,4 +55,8 @@ app.listen(PORT, () => {
 }).on('error', err => {
   logger.error(err)
   process.exit(1)
+})
+
+process.on('unhandledRejection', (error: Error) => {
+  logger.error('unhandledRejection', error.message)
 })
