@@ -59,4 +59,5 @@ app.listen(PORT, () => {
 
 process.on('unhandledRejection', (error: Error) => {
   logger.error('unhandledRejection', error.message)
+  process.exit(1)
 })
